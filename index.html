@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ứng dụng quản lý tài chính và thời khóa biểu</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <link rel="stylesheet" href="css/login.css"/>
+  <link rel="stylesheet" href="css/calculator.css"/>
+  <link rel="stylesheet" href="css/schedule.css"/>
+</head>
+<body>
+  <div id="auth-section">
+    <div class="auth-container">
+      <h2 id="auth-title">Đăng nhập</h2>
+      <form id="auth-form">
+        <input type="email" id="username" placeholder="Email" required />
+        <input type="password" id="password" placeholder="Mật khẩu" required />
+        <button type="submit" id="auth-btn">Đăng nhập</button>
+      </form>
+      <p id="toggle-auth">
+        Chưa có tài khoản? <a href="#" id="toggle-link">Đăng ký</a>
+      </p>
+    </div>
+  </div>
+
+  <div id="main-section" style="display: none;">
+    <nav class="menu">
+      <button onclick="showSection('calculator')">💵 Calculator</button>
+      <button onclick="showSection('schedule')">📅 Thời khóa biểu</button>
+      <button onclick="logout()">🚪 Đăng xuất</button>
+    </nav>
+
+    <div id="calculator-section" class="section">
+  <h2>💰 Mục tiêu</h2>
+  <form id="calculator-form">
+    <label for="target-amount">Số tiền mục tiêu:</label>
+    <input type="text" id="target-amount" name="target-amount" placeholder="Nhập số tiền (VND)" required>
+    <label for="current-amount">Số tiền hiện có:</label>
+    <input type="text" id="current-amount" name="current-amount" placeholder="Nhập số tiền (VND)" required>
+    <label for="weekly-hours">Số giờ làm tuần vừa qua:</label>
+    <input type="number" id="weekly-hours" name="weekly-hours" placeholder="Nhập số giờ" min="0">
+    <button type="submit">💾 Lưu</button>
+  </form>
+  <div id="result-section">
+    <div class="progress"></div>
+    <button id="history-btn">📜 Nhật ký</button>
+    <div id="history-section" style="display: none;"></div>
+  </div>
+</div>
+
+    <div id="schedule-section" class="section" style="display: none;">
+      <h2>📅 Thời khóa biểu</h2>
+      <button onclick="editSchedule()">Chỉnh sửa</button>
+      <table id="schedule-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Thứ 2</th>
+            <th>Thứ 3</th>
+            <th>Thứ 4</th>
+            <th>Thứ 5</th>
+            <th>Thứ 6</th>
+            <th>Thứ 7</th>
+            <th>CN</th>
+          </tr>
+        </thead>
+        <tbody id="schedule-body"></tbody>
+      </table>
+
+      <div id="edit-schedule" style="display: none;">
+        <h3>Chỉnh sửa thời khóa biểu</h3>
+        <form id="schedule-form">
+          <label>Chọn ngày:</label>
+          <select id="edit-day">
+            <option value="0">Thứ 2</option>
+            <option value="1">Thứ 3</option>
+            <option value="2">Thứ 4</option>
+            <option value="3">Thứ 5</option>
+            <option value="4">Thứ 6</option>
+            <option value="5">Thứ 7</option>
+            <option value="6">CN</option>
+          </select>
+          <label>Chọn ca:</label>
+          <select id="edit-shift"></select>
+          <label>Giờ ca:</label>
+          <input type="text" id="shift-time" placeholder="VD: 6h-9h" />
+          <label>Ghi chú:</label>
+          <textarea id="shift-note" placeholder="Chơi với vợ hoặc đi học thêm, đi chơi"></textarea>
+          <label>Icon hoạt động:</label>
+          <select id="shift-icon">
+            <option value="">❌ Không chọn</option>
+            <option value="work">🏃 Đi làm</option>
+            <option value="study">🎓 Đi học</option>
+            <option value="extra">📚 Học thêm</option>
+            <option value="play">🎮 Đi chơi</option>
+            <option value="Free">🌷͙֒ Free </option>
+            <option value="other">📌 Khác</option>
+          </select>
+          <button type="submit">💾 Lưu thay đổi</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ Firebase SDK (compat version v9) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBfl9q94MOE7XlxcPZBcobcDZBvJvjVgNk",
+      authDomain: "myapp-49f38.firebaseapp.com",
+      projectId: "myapp-49f38",
+      storageBucket: "myapp-49f38.appspot.com",
+      messagingSenderId: "974202894063",
+      appId: "1:974202894063:web:a0bc790d0863fb8c95cd1a",
+      measurementId: "G-MTN1WFF8RC"
+    };
+    firebase.initializeApp(firebaseConfig);
+  </script>
+
+  <script src="js/auth.js"></script>
+  <script src="js/calculator.js"></script>
+  <script src="js/schedule.js"></script>
+
+  <!-- Script gắn lại sự kiện toggle sau khi cập nhật DOM -->
+  <script>
+    function showSection(sectionId) {
+      const sections = document.querySelectorAll('.section');
+      sections.forEach(section => {
+        section.style.display = 'none';
+      });
+      document.getElementById(sectionId + '-section').style.display = 'block';
+      if (sectionId === 'schedule') {
+        loadSchedule();
+      }
+    }
+
+    function logout() {
+      firebase.auth().signOut().then(() => {
+        document.getElementById('main-section').style.display = 'none';
+        document.getElementById('auth-section').style.display = 'block';
+      }).catch((error) => {
+        console.error('Logout error:', error);
+      });
+    }
+
+    // Gắn sự kiện chuyển đổi đăng nhập / đăng ký
+    function attachToggleAuthEvent() {
+      const toggleLink = document.getElementById('toggle-link');
+      if (toggleLink) {
+        toggleLink.addEventListener('click', (e) => {
+          e.preventDefault();
+          if (typeof toggleAuth === 'function') {
+            toggleAuth();
+          }
+        });
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', attachToggleAuthEvent);
+  </script>
+</body>
+</html>
