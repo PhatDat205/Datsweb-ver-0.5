@@ -8,7 +8,7 @@ const defaultShifts = [
   { time: 'Tiết 2: ☀️ ', note: '', icon: '' },
   { time: 'Tiết 3: ☀️', note: '', icon: '' },
   { time: 'Tiết 4: ☀️', note: '', icon: '' },
-  { time: '🌙: 5h30-7h', note: '', icon: '' },
+  { time: '🌙: 5h30-7h30', note: '', icon: '' },
   { time: '🌙: 7h30-9h', note: '', icon: '' },
   { time: '🌙: 9h-23h', note: '', icon: '' },
 ];
