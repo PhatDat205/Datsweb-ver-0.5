@@ -1,16 +1,16 @@
 const defaultShifts = [
-  { time: 'Tiết 1: 🌤️', note: '', icon: '' },
-  { time: 'Tiết 2: 🌤️', note: '', icon: '' },
-  { time: 'Tiết 3: 🌤️', note: '', icon: '' },
-  { time: 'Tiết 4: 🌤️', note: '', icon: '' },
-  { time: 'Tiết 5: 🌤️', note: '', icon: '' },
-  { time: 'Tiết 1: ☀️', note: '', icon: '' },
-  { time: 'Tiết 2: ☀️ ', note: '', icon: '' },
-  { time: 'Tiết 3: ☀️', note: '', icon: '' },
-  { time: 'Tiết 4: ☀️', note: '', icon: '' },
-  { time: '🌙: 5h30-7h', note: '', icon: '' },
-  { time: '🌙: 7h30-9h', note: '', icon: '' },
-  { time: '🌙: 9h-23h', note: '', icon: '' },
+  { time: 'Tiết 1', note: '', icon: '' },
+  { time: 'Tiết 2', note: '', icon: '' },
+  { time: 'Tiết 3', note: '', icon: '' },
+  { time: 'Tiết 4', note: '', icon: '' },
+  { time: 'Tiết 5', note: '', icon: '' },
+  { time: 'Tiết 1', note: '', icon: '' },
+  { time: 'Tiết 2', note: '', icon: '' },
+  { time: 'Tiết 3', note: '', icon: '' },
+  { time: 'Tiết 4', note: '', icon: '' },
+  { time: '5h30-7h30', note: '', icon: '' },
+  { time: '7h30-9h', note: '', icon: '' },
+  { time: '9h-23h', note: '', icon: '' },
 ];
 
 function generateEmptySchedule() {
@@ -146,12 +146,10 @@ function applyTempEdit(day, shift) {
   }
 }
 
-let currentWeatherSymbol = null;
-
 async function fetchWeather() {
   try {
     const response = await fetch(
-      'https://api.open-meteo.com/v1/forecast?latitude=10.88&longitude=106.59&current=temperature_2m,weather_code&timezone=Asia/Ho_Chi_Minh'
+      'https://api.open-meteo.com/v1/forecast?latitude=10.7769&longitude=106.7009&current=temperature_2m,weather_code,uv_index,precipitation_probability&timezone=Asia/Ho_Chi_Minh'
     );
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -161,53 +159,56 @@ async function fetchWeather() {
     const weatherInfo = document.getElementById('weather-info');
     if (!weatherInfo) return;
 
-    const { temperature_2m, weather_code, time } = data.current;
+    const { temperature_2m, weather_code, uv_index, precipitation_probability, time } = data.current;
 
+    // Ghi log toàn bộ dữ liệu API để kiểm tra
+    console.log('API Response:', { temperature_2m, weather_code, uv_index, precipitation_probability, time });
+
+    // Chuyển đổi thời gian sang định dạng giờ địa phương
     const timeInHocMon = new Date(time).toLocaleTimeString('vi-VN', {
       hour: '2-digit',
       minute: '2-digit',
       hour12: false,
     });
 
-    let weatherStatus = '🌤️ Nắng nhẹ';
-    switch (weather_code) {
-      case 0: weatherStatus = '☀️ Trời quang'; break;
-      case 1: case 2: case 3: weatherStatus = '🌤️ Nắng nhẹ'; break;
-      case 45: case 48: weatherStatus = '🌫️ Sương mù'; break;
-      case 51: case 53: case 55: weatherStatus = '🌧️ Mưa phùn'; break;
-      case 61: case 63: case 65: weatherStatus = '🌧️ Mưa'; break;
-      case 66: case 67: weatherStatus = '🌧️ Mưa to'; break;
-      case 80: case 81: case 82: weatherStatus = '🌧️ Mưa rào'; break;
-      case 95: weatherStatus = '⛈️ Dông'; break;
-      default: weatherStatus = '🌤️ Nắng nhẹ'; break;
+    // Kiểm tra giờ để xác định ban đêm (18:00-6:00)
+    const currentHour = new Date(time).getHours();
+    const isNight = currentHour >= 18 || currentHour < 6;
+
+    // Xác định tình trạng thời tiết dựa trên weather_code và precipitation_probability
+    let weatherStatus = 'Không xác định';
+    if (precipitation_probability > 50) {
+      weatherStatus = 'Có thể mưa';
+    } else {
+      switch (weather_code) {
+        case 0: weatherStatus = isNight ? 'Trời quang ban đêm' : 'Trời quang'; break;
+        case 1: case 2: case 3: weatherStatus = isNight ? 'Mây rải rác' : 'Nắng nhẹ'; break;
+        case 45: case 48: weatherStatus = 'Sương mù'; break;
+        case 51: case 53: case 55: weatherStatus = 'Mưa phùn'; break;
+        case 61: case 63: case 65: weatherStatus = 'Mưa'; break;
+        case 66: case 67: weatherStatus = 'Mưa to'; break;
+        case 80: case 81: case 82: weatherStatus = 'Mưa rào'; break;
+        case 95: weatherStatus = 'Dông'; break;
+        default: weatherStatus = 'Không xác định'; break;
+      }
     }
 
-    const symbol = weatherStatus.split(' ')[0];
-    if (symbol !== currentWeatherSymbol) {
-      currentWeatherSymbol = symbol;
-      updateWeatherIcons(symbol);
+    // Cảnh báo nếu precipitation_probability và weather_code mâu thuẫn
+    if (precipitation_probability < 10 && [61, 63, 65, 66, 67, 80, 81, 82, 95].includes(weather_code)) {
+      console.warn('Warning: Low precipitation probability but weather_code indicates rain.');
+      weatherStatus = 'Có thể mưa';
     }
 
-    weatherInfo.innerHTML = `${weatherStatus} | Nhiệt độ: ${temperature_2m}°C | Giờ: ${timeInHocMon}`;
+    // Hiển thị thông tin thời tiết
+    weatherInfo.innerHTML = `
+      Tình trạng: ${weatherStatus} | Nhiệt độ: ${temperature_2m}°C | Xác suất mưa: ${precipitation_probability}% | Chỉ số UV: ${uv_index} | Giờ: ${timeInHocMon}
+    `;
   } catch (error) {
     console.error('Error fetching weather:', error);
     const weatherInfo = document.getElementById('weather-info');
     if (weatherInfo) {
       weatherInfo.innerHTML = 'Không thể tải thông tin thời tiết';
     }
-  }
-}
-
-function updateWeatherIcons(symbol) {
-  const tbody = document.getElementById('schedule-body');
-  if (!tbody) return;
-
-  for (let row of tbody.rows) {
-    const firstCell = row.cells[0];
-    if (!firstCell) continue;
-
-    const baseText = firstCell.innerText.replace(/:.*$/, '');
-    firstCell.innerText = `${baseText}: ${symbol}`;
   }
 }
 
@@ -252,8 +253,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (user) {
       localStorage.setItem('currentUser', user.uid);
       await loadSchedule();
-      await fetchWeather();
-      setInterval(fetchWeather, 60 * 1000); // Cập nhật mỗi phút nếu có thay đổi
+      await fetchWeather(); // Gọi hàm lấy thời tiết lần đầu
+      setInterval(fetchWeather, 10 * 60 * 1000); // Cập nhật thời tiết mỗi 10 phút
     } else {
       localStorage.removeItem('currentUser');
     }
