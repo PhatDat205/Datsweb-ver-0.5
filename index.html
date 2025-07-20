@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="css/login.css"/>
   <link rel="stylesheet" href="css/calculator.css"/>
   <link rel="stylesheet" href="css/schedule.css"/>
+  <link rel="stylesheet" href="css/calendar.css"/> <!-- Thêm CSS cho lịch -->
   <link rel="icon" href="https://i.pinimg.com/736x/59/e8/b3/59e8b3c16de28f1cdf885da5e3e53e67.jpg" type="image/jpg">
 </head>
 <body>
@@ -29,6 +30,7 @@
     <nav class="menu">
       <button onclick="showSection('calculator')">💵 Calculator</button>
       <button onclick="showSection('schedule')">📅 Thời khóa biểu</button>
+      <button onclick="showSection('calendar')">🗓️ Lịch</button> <!-- Thêm nút Lịch -->
       <button onclick="logout()">🚪 Đăng xuất</button>
     </nav>
 
@@ -51,119 +53,144 @@
     </div>
 
     <div id="schedule-section" class="section" style="display: none;">
-  <h2>📅 Thời khóa biểu</h2>
-  <div id="weather-container">
-    <h3>Thời tiết hiện tại - Hóc Môn, TP.HCM</h3>
-    <div id="weather-info">Đang tải thời tiết...</div>
-  </div>
-  <button onclick="editSchedule()">Chỉnh sửa</button>
-  <table id="schedule-table">
-    <thead>
-      <tr>
-        <th></th>
-        <th>Thứ 2</th>
-        <th>Thứ 3</th>
-        <th>Thứ 4</th>
-        <th>Thứ 5</th>
-        <th>Thứ 6</th>
-        <th>Thứ 7</th>
-        <th>CN</th>
-      </tr>
-    </thead>
-    <tbody id="schedule-body"></tbody>
-  </table>
-  <div id="edit-schedule" style="display: none;">
-    <h3>Chỉnh sửa thời khóa biểu</h3>
-    <form id="schedule-form">
-      <label>Chọn ngày:</label>
-      <select id="edit-day">
-        <option value="0">Thứ 2</option>
-        <option value="1">Thứ 3</option>
-        <option value="2">Thứ 4</option>
-        <option value="3">Thứ 5</option>
-        <option value="4">Thứ 6</option>
-        <option value="5">Thứ 7</option>
-        <option value="6">CN</option>
-      </select>
-      <label>Chọn ca:</label>
-      <select id="edit-shift"></select>
-      <label>Giờ ca:</label>
-      <input type="text" id="shift-time" placeholder="VD: 6h-9h" />
-      <label>Ghi chú:</label>
-      <textarea id="shift-note" placeholder="Chơi với vợ hoặc đi học thêm, đi chơi"></textarea>
-      <label>Icon hoạt động:</label>
-      <select id="shift-icon">
-        <option value="">❌ Không chọn</option>
-        <option value="work">🏃 Đi làm</option>
-        <option value="study">🎓 Đi học</option>
-        <option value="extra">📚 Học thêm</option>
-        <option value="play">🎮 Đi chơi</option>
-        <option value="Free">🌷͙֒ Free</option>
-        <option value="other">📌 Khác</option>
-      </select>
-      <button type="submit">💾 Lưu thay đổi</button>
-    </form>
-  </div>
-</div>
+      <h2>📅 Thời khóa biểu</h2>
+      <div id="weather-container">
+        <h3>Thời tiết hiện tại - TP.HCM</h3> <!-- Cập nhật thành TP.HCM -->
+        <div id="weather-info">Đang tải thời tiết...</div>
+      </div>
+      <button onclick="editSchedule()">Chỉnh sửa</button>
+      <table id="schedule-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Thứ 2</th>
+            <th>Thứ 3</th>
+            <th>Thứ 4</th>
+            <th>Thứ 5</th>
+            <th>Thứ 6</th>
+            <th>Thứ 7</th>
+            <th>CN</th>
+          </tr>
+        </thead>
+        <tbody id="schedule-body"></tbody>
+      </table>
+      <div id="edit-schedule" style="display: none;">
+        <h3>Chỉnh sửa thời khóa biểu</h3>
+        <form id="schedule-form">
+          <label>Chọn ngày:</label>
+          <select id="edit-day">
+            <option value="0">Thứ 2</option>
+            <option value="1">Thứ 3</option>
+            <option value="2">Thứ 4</option>
+            <option value="3">Thứ 5</option>
+            <option value="4">Thứ 6</option>
+            <option value="5">Thứ 7</option>
+            <option value="6">CN</option>
+          </select>
+          <label>Chọn ca:</label>
+          <select id="edit-shift"></select>
+          <label>Giờ ca:</label>
+          <input type="text" id="shift-time" placeholder="VD: 6h-9h" />
+          <label>Ghi chú:</label>
+          <textarea id="shift-note" placeholder="Chơi với vợ hoặc đi học thêm, đi chơi"></textarea>
+          <label>Icon hoạt động:</label>
+          <select id="shift-icon">
+            <option value="">❌ Không chọn</option>
+            <option value="work">🏃 Đi làm</option>
+            <option value="study">🎓 Đi học</option>
+            <option value="extra">📚 Học thêm</option>
+            <option value="play">🎮 Đi chơi</option>
+            <option value="Free">🌷͙֒ Free</option>
+            <option value="other">📌 Khác</option>
+          </select>
+          <button type="submit">💾 Lưu thay đổi</button>
+        </form>
+      </div>
+    </div>
 
-  <!-- Firebase SDK (compat version v9) -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <div id="calendar-section" class="section" style="display: none;">
+      <h2>🗓️ Lịch</h2>
+      <div id="calendar-header">
+        <button id="prev-month">◄</button>
+        <span id="month-year"></span>
+        <button id="next-month">►</button>
+      </div>
+      <table id="calendar-table">
+        <thead>
+          <tr>
+            <th>T2</th>
+            <th>T3</th>
+            <th>T4</th>
+            <th>T5</th>
+            <th>T6</th>
+            <th>T7</th>
+            <th>CN</th>
+          </tr>
+        </thead>
+        <tbody id="calendar-body"></tbody>
+      </table>
+    </div>
 
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyBfl9q94MOE7XlxcPZBcobcDZBvJvjVgNk",
-      authDomain: "myapp-49f38.firebaseapp.com",
-      projectId: "myapp-49f38",
-      storageBucket: "myapp-49f38.appspot.com",
-      messagingSenderId: "974202894063",
-      appId: "1:974202894063:web:a0bc790d0863fb8c95cd1a",
-      measurementId: "G-MTN1WFF8RC"
-    };
-    firebase.initializeApp(firebaseConfig);
-  </script>
+    <!-- Firebase SDK (compat version v9) -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
-  <script src="js/auth.js"></script>
-  <script src="js/calculator.js"></script>
-  <script src="js/schedule.js"></script>
+    <script>
+      const firebaseConfig = {
+        apiKey: "AIzaSyBfl9q94MOE7XlxcPZBcobcDZBvJvjVgNk",
+        authDomain: "myapp-49f38.firebaseapp.com",
+        projectId: "myapp-49f38",
+        storageBucket: "myapp-49f38.appspot.com",
+        messagingSenderId: "974202894063",
+        appId: "1:974202894063:web:a0bc790d0863fb8c95cd1a",
+        measurementId: "G-MTN1WFF8RC"
+      };
+      firebase.initializeApp(firebaseConfig);
+    </script>
 
-  <!-- Script điều hướng -->
-  <script>
-    function showSection(sectionId) {
-      const sections = document.querySelectorAll('.section');
-      sections.forEach(section => {
-        section.style.display = 'none';
-      });
-      document.getElementById(sectionId + '-section').style.display = 'block';
-      if (sectionId === 'schedule') {
-        loadSchedule();
+    <script src="js/auth.js"></script>
+    <script src="js/calculator.js"></script>
+    <script src="js/schedule.js"></script>
+    <script src="js/calendar.js"></script> <!-- Thêm JS cho lịch -->
+
+    <!-- Script điều hướng -->
+    <script>
+      function showSection(sectionId) {
+        const sections = document.querySelectorAll('.section');
+        sections.forEach(section => {
+          section.style.display = 'none';
+        });
+        document.getElementById(sectionId + '-section').style.display = 'block';
+        if (sectionId === 'schedule') {
+          loadSchedule();
+        } else if (sectionId === 'calendar') {
+          loadCalendar(); // Gọi hàm load lịch
+        }
       }
-    }
 
-    function logout() {
-      firebase.auth().signOut().then(() => {
-        document.getElementById('main-section').style.display = 'none';
-        document.getElementById('auth-section').style.display = 'block';
-      }).catch((error) => {
-        console.error('Logout error:', error);
-      });
-    }
-
-    // Gắn sự kiện chuyển đổi đăng nhập / đăng ký
-    function attachToggleAuthEvent() {
-      const toggleLink = document.getElementById('toggle-link');
-      if (toggleLink) {
-        toggleLink.addEventListener('click', (e) => {
-          e.preventDefault();
-          if (typeof toggleAuth === 'function') {
-            toggleAuth();
-          }
+      function logout() {
+        firebase.auth().signOut().then(() => {
+          document.getElementById('main-section').style.display = 'none';
+          document.getElementById('auth-section').style.display = 'block';
+        }).catch((error) => {
+          console.error('Logout error:', error);
         });
       }
-    }
 
-    document.addEventListener('DOMContentLoaded', attachToggleAuthEvent);
-  </script>
-</body>
+      function attachToggleAuthEvent() {
+        const toggleLink = document.getElementById('toggle-link');
+        if (toggleLink) {
+          toggleLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (typeof toggleAuth === 'function') {
+              toggleAuth();
+            }
+          });
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', attachToggleAuthEvent);
+    </script>
+  </body>
 </html>
