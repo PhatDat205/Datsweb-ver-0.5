@@ -1,16 +1,16 @@
 const defaultShifts = [
-  { time: 'Tiết 1', note: '', icon: '' },
-  { time: 'Tiết 2', note: '', icon: '' },
-  { time: 'Tiết 3', note: '', icon: '' },
-  { time: 'Tiết 4', note: '', icon: '' },
-  { time: 'Tiết 5', note: '', icon: '' },
-  { time: 'Tiết 1', note: '', icon: '' },
-  { time: 'Tiết 2', note: '', icon: '' },
-  { time: 'Tiết 3', note: '', icon: '' },
-  { time: 'Tiết 4', note: '', icon: '' },
-  { time: '5h30-7h30', note: '', icon: '' },
-  { time: '7h30-9h', note: '', icon: '' },
-  { time: '9h-23h', note: '', icon: '' },
+  { time: 'Tiết 1: 🌤️', note: '', icon: '' },
+  { time: 'Tiết 2: 🌤️', note: '', icon: '' },
+  { time: 'Tiết 3: 🌤️', note: '', icon: '' },
+  { time: 'Tiết 4: 🌤️', note: '', icon: '' },
+  { time: 'Tiết 5: 🌤️', note: '', icon: '' },
+  { time: 'Tiết 1: ☀️', note: '', icon: '' },
+  { time: 'Tiết 2: ☀️ ', note: '', icon: '' },
+  { time: 'Tiết 3: ☀️', note: '', icon: '' },
+  { time: 'Tiết 4: ☀️', note: '', icon: '' },
+  { time: '🌙: 5h30-7h30', note: '', icon: '' },
+  { time: '🌙: 7h30-9h', note: '', icon: '' },
+  { time: '🌙: 9h-23h', note: '', icon: '' },
 ];
 
 function generateEmptySchedule() {
@@ -148,9 +148,9 @@ function applyTempEdit(day, shift) {
 
 async function fetchWeather() {
   try {
-    const response = await fetch(
-      'https://api.open-meteo.com/v1/forecast?latitude=10.7769&longitude=106.7009&current=temperature_2m,weather_code,uv_index,precipitation_probability&timezone=Asia/Ho_Chi_Minh'
-    );
+  const response = await fetch(
+  'https://api.open-meteo.com/v1/forecast?latitude=10.8636&longitude=106.6291&current=temperature_2m,weather_code,uv_index,precipitation_probability&timezone=Asia/Ho_Chi_Minh'
+);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
