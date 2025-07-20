@@ -1,3 +1,5 @@
+// js/schedule.js
+
 const defaultShifts = [
   { time: 'Tiết 1: 🌤️', note: '', icon: '' },
   { time: 'Tiết 2: 🌤️', note: '', icon: '' },
@@ -105,6 +107,24 @@ async function loadSchedule() {
       }
     });
   });
+
+  // Thêm nút Phóng to
+  if (!document.getElementById('zoom-schedule-btn')) {
+    const zoomBtn = document.createElement('button');
+    zoomBtn.id = 'zoom-schedule-btn';
+    zoomBtn.textContent = 'Phóng to';
+    zoomBtn.style.margin = '20px auto 0 auto';
+    zoomBtn.style.display = 'block';
+    zoomBtn.style.backgroundColor = '#28a745';
+    zoomBtn.style.color = '#fff';
+    zoomBtn.style.fontSize = '16px';
+    zoomBtn.style.borderRadius = '5px';
+    zoomBtn.style.padding = '10px 24px';
+    zoomBtn.style.border = 'none';
+    zoomBtn.style.cursor = 'pointer';
+    zoomBtn.onclick = showFullScreenSchedule;
+    document.getElementById('schedule-section').appendChild(zoomBtn);
+  }
 }
 
 function getIcon(icon) {
@@ -146,11 +166,82 @@ function applyTempEdit(day, shift) {
   }
 }
 
+// Hàm hiển thị thời khóa biểu toàn màn hình
+function showFullScreenSchedule() {
+  const table = document.getElementById('schedule-table');
+  if (!table) {
+    console.error('Schedule table not found');
+    return;
+  }
+
+  // Tạo modal toàn màn hình
+  const modal = document.createElement('div');
+  modal.id = 'fullscreen-schedule-modal';
+  modal.style.position = 'fixed';
+  modal.style.top = '0';
+  modal.style.left = '0';
+  modal.style.width = '100vw';
+  modal.style.height = '100vh';
+  modal.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+  modal.style.display = 'flex';
+  modal.style.alignItems = 'center';
+  modal.style.justifyContent = 'center';
+  modal.style.zIndex = '1000';
+  modal.style.overflow = 'auto';
+
+  // Tạo container cho bảng
+  const tableContainer = document.createElement('div');
+  tableContainer.style.backgroundColor = '#fff';
+  tableContainer.style.borderRadius = '8px';
+  tableContainer.style.padding = '20px';
+  tableContainer.style.maxWidth = '95vw';
+  tableContainer.style.maxHeight = '95vh';
+  tableContainer.style.overflow = 'hidden';
+  tableContainer.style.position = 'relative';
+
+  // Sao chép bảng
+  const clonedTable = table.cloneNode(true);
+  clonedTable.style.transformOrigin = 'top left';
+  clonedTable.style.width = 'auto';
+  clonedTable.style.height = 'auto';
+
+  // Tính tỷ lệ để bảng vừa modal
+  const windowWidth = window.innerWidth * 1;
+  const windowHeight = window.innerHeight * 0.99;
+  const tableWidth = table.offsetWidth;
+  const tableHeight = table.offsetHeight;
+  const scale = Math.min(windowWidth / tableWidth, windowHeight / tableHeight);
+  clonedTable.style.transform = `scale(${scale})`;
+
+  // Nút đóng
+  const closeButton = document.createElement('button');
+  closeButton.textContent = 'X';
+  closeButton.style.position = 'absolute';
+  closeButton.style.top = '10px';
+  closeButton.style.right = '10px';
+  closeButton.style.backgroundColor = '#ff4444';
+  closeButton.style.color = '#fff';
+  closeButton.style.border = 'none';
+  closeButton.style.borderRadius = '5px';
+  closeButton.style.padding = '5px 10px';
+  closeButton.style.cursor = 'pointer';
+  closeButton.style.fontSize = '16px';
+  closeButton.onclick = () => modal.remove();
+
+  // Thêm bảng và nút đóng vào container
+  tableContainer.appendChild(clonedTable);
+  tableContainer.appendChild(closeButton);
+  modal.appendChild(tableContainer);
+  document.body.appendChild(modal);
+
+  console.log('Full-screen schedule displayed with scale:', scale);
+}
+
 async function fetchWeather() {
   try {
-  const response = await fetch(
-  'https://api.open-meteo.com/v1/forecast?latitude=10.8636&longitude=106.6291&current=temperature_2m,weather_code,uv_index,precipitation_probability&timezone=Asia/Ho_Chi_Minh'
-);
+    const response = await fetch(
+      'https://api.open-meteo.com/v1/forecast?latitude=10.8636&longitude=106.6291&current=temperature_2m,weather_code,uv_index,precipitation_probability&timezone=Asia/Ho_Chi_Minh'
+    );
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
