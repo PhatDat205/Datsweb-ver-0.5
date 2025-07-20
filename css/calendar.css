@@ -1,0 +1,226 @@
+/* calendar.css */
+
+/* Container chính của lịch */
+#calendar-section {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Header của lịch (tiêu đề tháng/năm và nút điều hướng) */
+#calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+/* Nút điều hướng tháng */
+#calendar-header button {
+  padding: 10px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+#calendar-header button:hover {
+  background-color: #0056b3;
+}
+
+/* Nút chỉnh sửa lịch */
+#calendar-edit-btn {
+  background-color: #ff9800;
+  color: #fff;
+  margin: 20px auto 0 auto;
+  display: block;
+  font-size: 16px;
+  border-radius: 5px;
+  padding: 10px 24px;
+  border: none;
+  cursor: pointer;
+}
+
+#calendar-edit-btn:hover {
+  background-color: #e68900;
+}
+
+/* Tiêu đề tháng/năm */
+#month-year {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/* Bảng lịch */
+#calendar-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Tiêu đề cột (T2, T3, ..., CN) */
+#calendar-table th {
+  background-color: #007bff;
+  color: white;
+  padding: 10px;
+  text-align: center;
+  border: 1px solid #ddd;
+}
+
+/* Ô lịch */
+#calendar-table td {
+  background-color: #f0f2f5;
+  padding: 0;
+  height: 100px;
+  width: 14.28%;
+  box-sizing: border-box;
+  border: 1px solid #ddd;
+  text-align: center;
+  vertical-align: top;
+}
+
+/* Ô lịch cụ thể */
+#calendar-table td.calendar-cell {
+  background-color: #f0f2f5;
+  vertical-align: top;
+  height: 100px;
+  width: 14.28%;
+  box-sizing: border-box;
+  padding: 0;
+  transition: background 0.2s;
+}
+
+/* Màu nền cho các trạng thái icon */
+#calendar-table td.happy {
+  background-color: #2196f3;
+}
+#calendar-table td.sad {
+  background-color: #888;
+}
+#calendar-table td.normal {
+  background-color: #ff9800;
+}
+
+/* Nội dung trong ô lịch */
+#calendar-table td .cell-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 6px 2px;
+  cursor: pointer;
+}
+
+/* Ô ngày hôm nay */
+#calendar-table td.today {
+  border: 2px solid #2196f3;
+}
+
+/* Icon trong ô lịch */
+.calendar-icon {
+  font-size: 28px;
+  margin-top: 4px;
+  margin-bottom: 2px;
+  display: block;
+}
+
+/* Ghi chú trong ô lịch */
+.calendar-note {
+  font-size: 14px;
+  color: #222;
+  margin-top: 2px;
+  word-break: break-word;
+  display: block;
+}
+
+/* Form chỉnh sửa lịch */
+.calendar-edit-form {
+  background: #fff;
+  border: 1px solid #bbb;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  max-width: 350px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+}
+
+.calendar-edit-form label {
+  display: block;
+  margin-top: 8px;
+  font-weight: bold;
+}
+
+.calendar-edit-form input,
+.calendar-edit-form select {
+  width: 100%;
+  margin-top: 4px;
+  margin-bottom: 8px;
+  padding: 6px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.calendar-edit-form button {
+  margin-right: 8px;
+  padding: 7px 16px;
+  border-radius: 5px;
+  border: none;
+  background: #2196f3;
+  color: #fff;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.calendar-edit-form button:last-child {
+  background: #888;
+}
+
+.calendar-edit-form button:hover {
+  opacity: 0.9;
+}
+
+/* Responsive cho thiết bị nhỏ */
+@media (max-width: 600px) {
+  #calendar-table th, #calendar-table td {
+    padding: 0;
+    height: 80px;
+    font-size: 14px;
+  }
+  #calendar-table td .cell-content {
+    padding: 4px 1px;
+  }
+  .calendar-icon {
+    font-size: 22px;
+  }
+  .calendar-note {
+    font-size: 12px;
+  }
+  #calendar-header button {
+    padding: 8px;
+    font-size: 14px;
+  }
+  #month-year {
+    font-size: 16px;
+  }
+  #calendar-edit-btn {
+    font-size: 14px;
+    padding: 8px 20px;
+  }
+  .calendar-edit-form {
+    max-width: 100%;
+    padding: 12px;
+  }
+  .calendar-edit-form input,
+  .calendar-edit-form select {
+    padding: 5px;
+  }
+  .calendar-edit-form button {
+    padding: 6px 12px;
+    font-size: 14px;
+  }
+}
