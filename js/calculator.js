@@ -25,10 +25,12 @@ function updateProgressCircle(percentage) {
 }
 
 // Hàm gắn sự kiện cho nút "Nhật ký"
+// Sửa: chỉ gắn event một lần duy nhất, không bị lặp
 function attachHistoryButtonEvent() {
     const historyBtn = document.getElementById('history-btn');
     if (historyBtn) {
-        historyBtn.removeEventListener('click', loadHistory); // Xóa sự kiện cũ
+        if (historyBtn._eventAttached) return;
+        historyBtn._eventAttached = true;
         historyBtn.addEventListener('click', () => {
             console.log('History button clicked');
             const modal = document.querySelector('.modal');
@@ -113,7 +115,7 @@ async function loadHistory() {
     console.log('Loading history for user:', user.uid);
     const db = firebase.firestore();
 
-    // Tải lịch sử tuần
+    // Tải lịch sử tuần (loại bỏ lặp)
     let weekHistoryList = '<h4>Lịch sử làm việc</h4><ul>';
     try {
         const weekHistoryRef = db.collection('users').doc(user.uid).collection('history').orderBy('week', 'asc');
@@ -121,13 +123,16 @@ async function loadHistory() {
         if (weekSnapshot.empty) {
             weekHistoryList += '<li>Chưa có lịch sử làm việc.</li>';
         } else {
+            const weekSet = new Set();
             weekSnapshot.forEach(doc => {
                 const data = doc.data();
-                weekHistoryList += `<li>Tuần ${data.week}: ${data.hours} giờ (+${formatCurrency(data.amountAdded)}) (+${data.percentageAdded.toFixed(2)}%)</li>`;
+                if (!weekSet.has(data.week)) {
+                    weekSet.add(data.week);
+                    weekHistoryList += `<li>Tuần ${data.week}: ${data.hours} giờ (+${formatCurrency(data.amountAdded)}) (+${data.percentageAdded.toFixed(2)}%)</li>`;
+                }
             });
         }
         weekHistoryList += '</ul>';
-        console.log('Week history loaded:', weekSnapshot.size, 'records');
     } catch (error) {
         console.error('Error loading week history:', error.message);
         weekHistoryList += '<li>Lỗi khi tải lịch sử làm việc: ' + error.message + '</li></ul>';
@@ -146,7 +151,7 @@ async function loadHistory() {
             goalHistoryList += `<li>Mục tiêu: ${formatCurrency(previousGoal.targetAmount)}, Hiện có: ${formatCurrency(previousGoal.currentAmount)} 
                                 <button class="goal-history-btn" data-id="${docs[1].id}">Quay lại</button></li>`;
         }
-        console.log('Goal history loaded:', goalSnapshot.size, 'records');
+        
     } catch (error) {
         console.error('Error loading goal history:', error.message);
         goalHistoryList += '<li>Lỗi khi tải lịch sử mục tiêu: ' + error.message + '</li></ul>';
