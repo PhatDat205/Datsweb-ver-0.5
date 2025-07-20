@@ -206,8 +206,8 @@ function showFullScreenSchedule() {
   clonedTable.style.height = 'auto';
 
   // Tính tỷ lệ để bảng vừa modal
-  const windowWidth = window.innerWidth * 1;
-  const windowHeight = window.innerHeight * 0.99;
+  const windowWidth = window.innerWidth * 0.9;
+  const windowHeight = window.innerHeight * 1;
   const tableWidth = table.offsetWidth;
   const tableHeight = table.offsetHeight;
   const scale = Math.min(windowWidth / tableWidth, windowHeight / tableHeight);
