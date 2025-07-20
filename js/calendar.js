@@ -154,7 +154,7 @@ async function loadCalendar(year = new Date().getFullYear(), month = new Date().
   // Tính ngày đầu và cuối tháng
   const firstDay = new Date(year, month, 1);
   const lastDay = new Date(year, month + 1, 0);
-  const firstDayOfWeek = firstDay.getDay();
+  const firstDayOfWeek = (firstDay.getDay() + 6) % 7;
   const daysInMonth = lastDay.getDate();
 
   // Load trạng thái từng ô từ Firestore
