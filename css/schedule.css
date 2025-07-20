@@ -9,6 +9,7 @@
     font-family: 'Segoe UI', sans-serif;
     position: relative;
     overflow: hidden;
+     overflow-x: auto; 
 }
 
 #schedule-section h2 {
