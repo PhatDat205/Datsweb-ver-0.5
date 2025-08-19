@@ -324,3 +324,18 @@
         padding: 8px 15px;
     }
 }
+.modal-content li.green {
+    background-color: #e8f5e9; /* Màu xanh nhạt */
+    color: #2e7d32; /* Màu chữ xanh đậm */
+}
+
+.modal-content li.orange {
+    background-color: #fff3e0; /* Màu cam nhạt */
+    color: #f57c00; /* Màu chữ cam đậm */
+}
+
+.modal-content li.red {
+    background-color: #ffebee; /* Màu đỏ nhạt */
+    color: #d32f2f; /* Màu chữ đỏ đậm */
+}
+
