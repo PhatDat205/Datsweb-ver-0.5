@@ -117,26 +117,35 @@ async function loadHistory() {
 
     // Tải lịch sử tuần (loại bỏ lặp)
     let weekHistoryList = '<h4>Lịch sử làm việc</h4><ul>';
-    try {
-        const weekHistoryRef = db.collection('users').doc(user.uid).collection('history').orderBy('week', 'asc');
-        const weekSnapshot = await weekHistoryRef.get();
-        if (weekSnapshot.empty) {
-            weekHistoryList += '<li>Chưa có lịch sử làm việc.</li>';
-        } else {
-            const weekSet = new Set();
-            weekSnapshot.forEach(doc => {
-                const data = doc.data();
-                if (!weekSet.has(data.week)) {
-                    weekSet.add(data.week);
-                    weekHistoryList += `<li>Tuần ${data.week}: ${data.hours} giờ (+${formatCurrency(data.amountAdded)}) (+${data.percentageAdded.toFixed(2)}%)</li>`;
+try {
+    const weekHistoryRef = db.collection('users').doc(user.uid).collection('history').orderBy('week', 'asc');
+    const weekSnapshot = await weekHistoryRef.get();
+    if (weekSnapshot.empty) {
+        weekHistoryList += '<li>Chưa có lịch sử làm việc.</li>';
+    } else {
+        const weekSet = new Set();
+        weekSnapshot.forEach(doc => {
+            const data = doc.data();
+            if (!weekSet.has(data.week)) {
+                weekSet.add(data.week);
+                // Xác định lớp màu dựa trên số giờ
+                let colorClass = '';
+                if (data.hours >= 20) {
+                    colorClass = 'green';
+                } else if (data.hours >= 16 && data.hours < 20) {
+                    colorClass = 'orange';
+                } else {
+                    colorClass = 'red';
                 }
-            });
-        }
-        weekHistoryList += '</ul>';
-    } catch (error) {
-        console.error('Error loading week history:', error.message);
-        weekHistoryList += '<li>Lỗi khi tải lịch sử làm việc: ' + error.message + '</li></ul>';
+                weekHistoryList += `<li class="${colorClass}">Tuần ${data.week}: ${data.hours} giờ (+${formatCurrency(data.amountAdded)}) (+${data.percentageAdded.toFixed(2)}%)</li>`;
+            }
+        });
     }
+    weekHistoryList += '</ul>';
+} catch (error) {
+    console.error('Error loading week history:', error.message);
+    weekHistoryList += '<li>Lỗi khi tải lịch sử làm việc: ' + error.message + '</li></ul>';
+}
 
     // Tải lịch sử mục tiêu (chỉ lấy mục tiêu trước đó)
     let goalHistoryList = '<h4>Lịch sử mục tiêu</h4><ul>';
@@ -559,3 +568,4 @@ class CircleProgress {
         this.element.querySelector('text').textContent = this.textFormat === 'percent' ? `${this.value.toFixed(2)}%` : this.value;
     }
 }
+
