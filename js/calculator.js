@@ -130,9 +130,9 @@ try {
                 weekSet.add(data.week);
                 // Xác định lớp màu dựa trên số giờ
                 let colorClass = '';
-                if (data.hours >= 20) {
+                if (data.hours >= 18) {
                     colorClass = 'green';
-                } else if (data.hours >= 16 && data.hours < 20) {
+                } else if (data.hours >= 16 && data.hours < 18) {
                     colorClass = 'orange';
                 } else {
                     colorClass = 'red';
@@ -568,4 +568,5 @@ class CircleProgress {
         this.element.querySelector('text').textContent = this.textFormat === 'percent' ? `${this.value.toFixed(2)}%` : this.value;
     }
 }
+
 
