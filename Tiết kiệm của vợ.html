@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<title>Tiết kiệm của vợ</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+:root{--bg:#fff0f5;--card:#fff;--tx:#4a1f33;--sub:#a0708a;--pk:#ff5c9a;--pk2:#ffb3d1;--soft:#ffe1ee;--line:#f6cfe0;--weekend:#c9a3b5;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1d0f17;--card:#2b1722;--tx:#ffe6f0;--sub:#c795ae;--soft:#3d2030;--line:#4d2a3c;--weekend:#8a6577;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#1d0f17;--card:#2b1722;--tx:#ffe6f0;--sub:#c795ae;--soft:#3d2030;--line:#4d2a3c;--weekend:#8a6577;color-scheme:dark}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0 auto;background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",Roboto,sans-serif;padding:14px 14px 40px;max-width:480px}
+h1{font-size:24px;margin:6px 4px 14px}
+.card{background:var(--card);border-radius:22px;padding:16px;margin-bottom:14px;box-shadow:0 4px 16px rgba(255,92,154,.12)}
+.card h2{font-size:15px;margin:0 0 12px;color:var(--pk)}
+label{display:block;font-size:12px;color:var(--sub);margin:0 0 4px 2px}
+input{width:100%;font-size:16px;padding:11px 12px;border:1.5px solid var(--line);border-radius:14px;background:var(--bg);color:var(--tx);outline:none}
+input:focus{border-color:var(--pk)}
+.row{display:flex;gap:10px}.row>div{flex:1;min-width:0}
+.ringwrap{display:flex;align-items:center;gap:12px;margin-top:14px}
+.ring{position:relative;width:150px;height:150px;flex:none}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring .pct{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:28px;font-weight:800;color:var(--pk)}
+.ring .pct small{font-size:11px;font-weight:500;color:var(--sub)}
+.side{flex:1;min-width:0}
+.ex{display:flex;gap:6px}
+.ex button{flex:none;width:44px;border:0;border-radius:14px;background:var(--soft);color:var(--pk);font-size:20px;font-weight:800}
+.hint{font-size:12px;color:var(--sub);margin-top:8px;line-height:1.4}
+.note{background:var(--soft);border-radius:16px;padding:12px 14px;margin-top:14px;font-size:15px;line-height:1.5}
+.note b{color:var(--pk)}
+.seg{display:flex;background:var(--soft);border-radius:12px;padding:3px;margin-top:12px}
+.seg button{flex:1;border:0;background:none;color:var(--sub);font-size:14px;font-weight:700;padding:8px;border-radius:10px}
+.seg button.on{background:var(--pk);color:#fff}
+.nav{display:flex;align-items:center;justify-content:space-between;margin:12px 0 6px;gap:6px}
+.nav button{border:0;background:var(--soft);color:var(--pk);min-width:38px;height:38px;border-radius:19px;font-size:18px;font-weight:700}
+.nav .today{font-size:13px;padding:0 12px}
+.nav .mt{font-size:18px;font-weight:800;text-align:center;flex:1}
+.grid{display:grid;grid-template-columns:repeat(7,1fr);row-gap:4px}
+.wd{text-align:center;font-size:12px;font-weight:700;padding:6px 0;border-bottom:1px solid var(--line);margin-bottom:4px}
+.d{height:56px;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:14px;font-weight:700;font-size:16px;user-select:none}
+.week .d{height:84px}
+.d.we{color:var(--weekend)}
+.d.on{background:linear-gradient(160deg,var(--pk2),var(--pk));color:#fff}
+.d small{font-size:10px;font-weight:700;min-height:12px}
+.d.today .n{background:var(--pk);color:#fff;border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center}
+.d.today.on .n{background:#fff;color:var(--pk)}
+.sum{display:flex;justify-content:space-between;font-size:13px;color:var(--sub);margin-top:12px}
+.sum b{color:var(--tx)}
+.reset{border:0;background:none;color:var(--sub);font-size:12px;text-decoration:underline;margin-top:8px}
+</style>
+</head>
+<body>
+<h1>💗 Tiết kiệm của vợ</h1>
+
+<div class="card">
+  <h2>Thông tin ban đầu (đồng)</h2>
+  <div class="row">
+    <div><label>Số tiền vợ đang có</label><input id="cur" inputmode="numeric" placeholder="1.000.000"></div>
+    <div><label>Lương 1 ngày công</label><input id="wage" inputmode="numeric" placeholder="260.000"></div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>🎯 Mục tiêu</h2>
+  <label>Số tiền mục tiêu</label>
+  <input id="goal" inputmode="numeric" placeholder="30.000.000">
+  <div class="ringwrap">
+    <div class="ring">
+      <svg viewBox="0 0 160 160"><circle cx="80" cy="80" r="68" fill="none" stroke="var(--soft)" stroke-width="16"/><circle id="arc" cx="80" cy="80" r="68" fill="none" stroke="var(--pk)" stroke-width="16" stroke-linecap="round" stroke-dasharray="427.26" stroke-dashoffset="427.26" style="transition:stroke-dashoffset .5s"/></svg>
+      <div class="pct"><span id="pct">0%</span><small>hoàn thành</small></div>
+    </div>
+    <div class="side">
+      <label>Tiền phát sinh (cộng/trừ)</label>
+      <div class="ex"><input id="extra" inputmode="numeric" placeholder="100.000"><button id="sign" aria-label="Đổi dấu cộng trừ">±</button></div>
+      <div class="hint">Bấm ± để chuyển thành số âm (trừ), hoặc gõ dấu - đầu số. Tiền phát sinh cộng/trừ thẳng vào số tiền hiện có.</div>
+    </div>
+  </div>
+  <div class="note" id="note1"></div>
+</div>
+
+<div class="card" id="calcard">
+  <h2>📅 Lịch ngày công</h2>
+  <label>Lương ngày công của lịch (sửa thoải mái)</label>
+  <input id="cwage" inputmode="numeric" placeholder="260.000">
+  <div class="seg"><button id="mWeek">Tuần</button><button id="mMonth">Tháng</button></div>
+  <div class="nav">
+    <button id="prev" aria-label="Trước">‹</button>
+    <div class="mt" id="mt"></div>
+    <button class="today" id="tod">Hôm nay</button>
+    <button id="next" aria-label="Sau">›</button>
+  </div>
+  <div class="grid" id="grid"></div>
+  <div class="sum"><span>Đã chấm: <b id="cnt">0</b> ngày</span><span>Tổng công: <b id="earn">0đ</b></span></div>
+  <div class="note" id="note2"></div>
+  <button class="reset" id="clr">Xoá toàn bộ ngày đã chấm</button>
+</div>
+
+<script>
+var KEY='tietkiem_vo_v2';
+var S={cur:'',wage:'',goal:'',extra:'',cwage:'',mode:'week',marks:{}};
+try{
+  var raw=localStorage.getItem(KEY);
+  if(raw){var p=JSON.parse(raw);if(p&&typeof p==='object'){for(var k in S){if(p[k]!==undefined)S[k]=p[k]}}}
+  else{
+    var old=localStorage.getItem('tietkiem_vo_v1');
+    if(old){var o=JSON.parse(old),conv=function(v){var n=parseFloat(v);return n>0?String(Math.round(n*1000)):''};
+      S.cur=conv(o.cur);S.wage=conv(o.wage);S.goal=conv(o.goal);S.cwage=conv(o.cwage);
+      var e=parseFloat(o.extra);S.extra=e?String(Math.round(e*1000)):'';
+      for(var d in (o.marks||{}))S.marks[d]=Math.round(o.marks[d]*1000);}
+  }
+}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+var $=function(i){return document.getElementById(i)};
+var digits=function(v){return parseInt(String(v).replace(/\D/g,'').slice(0,12)||'0',10)};
+var num=digits;
+var signed=function(v){return (String(v).charAt(0)==='-'?-1:1)*digits(v)};
+var money=function(n){return (n<0?'-':'')+Math.abs(Math.round(n)).toLocaleString('vi-VN')+'đ'};
+var short=function(n){return n%1000===0?(n/1000)+'k':Math.round(n/100)/10+'k'};
+function show(id){
+  var v=S[id],neg=String(v).charAt(0)==='-',d=String(v).replace(/\D/g,'');
+  $(id).value=(neg?'-':'')+(d?parseInt(d,10).toLocaleString('vi-VN'):'');
+}
+function bind(id,allowNeg){
+  show(id);
+  $(id).addEventListener('input',function(){
+    var s=this.value,neg=allowNeg&&s.trim().charAt(0)==='-';
+    var d=s.replace(/\D/g,'').slice(0,12).replace(/^0+(?=\d)/,'');
+    S[id]=(neg?'-':'')+d;show(id);save();calc();
+  });
+}
+bind('cur');bind('wage');bind('goal');bind('extra',true);bind('cwage');
+$('sign').onclick=function(){
+  var v=String(S.extra);
+  S.extra=v.charAt(0)==='-'?v.slice(1):'-'+v;
+  show('extra');save();calc();
+};
+
+var now=new Date();
+var ymd=function(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+var monday=function(d){var x=new Date(d.getFullYear(),d.getMonth(),d.getDate());x.setDate(x.getDate()-((x.getDay()+6)%7));return x};
+var anchor=monday(now),mview=new Date(now.getFullYear(),now.getMonth(),1);
+var WD=['T2','T3','T4','T5','T6','T7','CN'];
+
+function daysText(rem,w){var d=Math.ceil(rem/w);return '<b>'+d+' ngày công</b> nữa (× '+money(w)+' = '+money(d*w)+')'}
+
+function calc(){
+  var goal=num(S.goal),wage=num(S.wage),total=num(S.cur)+signed(S.extra);
+  var pct=goal?Math.max(0,Math.min(100,total/goal*100)):0;
+  $('pct').textContent=(Math.round(pct*10)/10)+'%';
+  $('arc').style.strokeDashoffset=427.26*(1-pct/100);
+  var h;
+  if(!goal)h='Nhập <b>số tiền mục tiêu</b> để bắt đầu tính nhé 💕';
+  else if(total>=goal)h='🎉 Vợ đã đạt mục tiêu! Hiện có <b>'+money(total)+'</b>, vượt '+money(total-goal)+'.';
+  else if(!wage)h='Hiện có <b>'+money(total)+'</b>, còn thiếu <b>'+money(goal-total)+'</b>. Nhập lương ngày công để tính số ngày.';
+  else h='Hiện có <b>'+money(total)+'</b>, còn thiếu <b>'+money(goal-total)+'</b>.<br>Vợ cần '+daysText(goal-total,wage)+' để đạt mục tiêu.';
+  $('note1').innerHTML=h;
+  renderCal();
+}
+
+function renderCal(){
+  var g=$('grid'),week=S.mode==='week';
+  g.className='grid'+(week?' week':'');g.innerHTML='';
+  $('mWeek').className=week?'on':'';$('mMonth').className=week?'':'on';
+  WD.forEach(function(w){var e=document.createElement('div');e.className='wd';e.textContent=w;g.appendChild(e)});
+  var cells=[];
+  if(week){
+    for(var i=0;i<7;i++)cells.push(new Date(anchor.getFullYear(),anchor.getMonth(),anchor.getDate()+i));
+    var a=cells[0],b=cells[6],f=function(d){return d.getDate()+'/'+(d.getMonth()+1)};
+    $('mt').textContent=f(a)+' – '+f(b)+'/'+b.getFullYear();
+  }else{
+    var y=mview.getFullYear(),m=mview.getMonth(),first=(new Date(y,m,1).getDay()+6)%7,dim=new Date(y,m+1,0).getDate();
+    for(var i=0;i<first;i++)cells.push(null);
+    for(var d=1;d<=dim;d++)cells.push(new Date(y,m,d));
+    $('mt').textContent='Tháng '+(m+1)+' · '+y;
+  }
+  var todayKey=ymd(now);
+  cells.forEach(function(dt,i){
+    var e=document.createElement('div');
+    if(!dt){g.appendChild(e);return}
+    var key=ymd(dt),col=i%7;
+    e.className='d'+(col>=5?' we':'')+(S.marks[key]?' on':'')+(key===todayKey?' today':'');
+    e.innerHTML='<span class="n">'+dt.getDate()+'</span><small>'+(S.marks[key]?'+'+short(S.marks[key]):'')+'</small>';
+    e.onclick=function(){
+      if(S.marks[key])delete S.marks[key];
+      else{var c=num(S.cwage);if(!c){$('cwage').focus();return}S.marks[key]=c}
+      save();renderCal();
+    };
+    g.appendChild(e);
+  });
+  var cnt=0,earn=0;
+  for(var k in S.marks){cnt++;earn+=S.marks[k]}
+  $('cnt').textContent=cnt;$('earn').textContent=money(earn);
+  var goal=num(S.goal),cw=num(S.cwage),total=num(S.cur)+signed(S.extra)+earn,h;
+  if(!goal)h='Nhập <b>số tiền mục tiêu</b> ở phần vòng tròn để tính.';
+  else if(total>=goal)h='🎉 Theo lịch, vợ đã đạt mục tiêu! Tổng <b>'+money(total)+'</b>, vượt '+money(total-goal)+'.';
+  else if(!cw)h='Tổng hiện tại <b>'+money(total)+'</b>, còn thiếu <b>'+money(goal-total)+'</b>. Nhập lương ngày công của lịch để tính số ngày.';
+  else h='Tiền hiện có + công đã chấm = <b>'+money(total)+'</b>, còn thiếu <b>'+money(goal-total)+'</b>.<br>Còn '+daysText(goal-total,cw)+' để đạt mục tiêu.';
+  $('note2').innerHTML=h;
+}
+
+function step(dir){
+  if(S.mode==='week')anchor=new Date(anchor.getFullYear(),anchor.getMonth(),anchor.getDate()+7*dir);
+  else mview=new Date(mview.getFullYear(),mview.getMonth()+dir,1);
+  renderCal();
+}
+function goToday(){now=new Date();anchor=monday(now);mview=new Date(now.getFullYear(),now.getMonth(),1);renderCal()}
+$('prev').onclick=function(){step(-1)};
+$('next').onclick=function(){step(1)};
+$('tod').onclick=goToday;
+$('mWeek').onclick=function(){S.mode='week';save();renderCal()};
+$('mMonth').onclick=function(){S.mode='month';save();renderCal()};
+$('clr').onclick=function(){if(confirm('Xoá toàn bộ ngày đã chấm trên lịch?')){S.marks={};save();renderCal()}};
+document.addEventListener('visibilitychange',function(){
+  if(!document.hidden&&ymd(new Date())!==ymd(now))goToday();
+});
+calc();
+</script>
+</body>
+</html>
